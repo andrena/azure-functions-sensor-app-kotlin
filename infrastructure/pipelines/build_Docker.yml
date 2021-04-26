@@ -1,0 +1,103 @@
+name: $(date:yyyy.MM.dd)$(rev:.r)
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+
+stages:
+  - stage: Build
+    displayName: Build function app
+    jobs:
+      - job: Build
+        displayName: Build app
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+            clean: true
+
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              mavenOptions: '-Xmx3072m'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.11'
+              jdkArchitectureOption: 'x64'
+              goals: 'clean package'
+              
+          - task: Docker@2
+            displayName: 'Build Docker image'
+            inputs:
+              containerRegistry: '$(dockerRegistry)'
+              repository: 'sensor-app'
+              command: build
+              Dockerfile: './infrastructure/pipelines/Dockerfile'
+              buildContext: '$(system.defaultworkingdirectory)/target/azure-functions/sensor-app/'
+              tags: |
+                $(Build.BuildNumber)
+              addPipelineData: false
+
+          - task: Docker@2
+            displayName: 'Push Docker image'
+            inputs:
+              containerRegistry: '$(dockerRegistry)'
+              repository: 'sensor-app'
+              command: push
+              tags: |
+                $(Build.BuildNumber)
+              addPipelineData: false
+
+          - pwsh: |
+              rm -rf $(system.defaultworkingdirectory)/target/azure-functions/sensor-app/
+            displayName: 'Clean up'
+
+          - task: CopyFiles@2
+            displayName: 'Copy resource template to artifacts'
+            inputs:
+              SourceFolder: infrastructure/templates 
+              Contents: '*.json'
+              TargetFolder: '$(build.artifactstagingdirectory)'
+
+          - publish: $(build.artifactstagingdirectory)
+            displayName: 'Publish Artifact: drop'
+            artifact: drop
+            condition: succeededOrFailed()
+  
+  - stage: Deploy
+    displayName: Deploy function app
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+      - deployment: Deploy
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: drop
+
+                - task: AzureResourceManagerTemplateDeployment@3
+                  displayName: Deploy resource group infrastructure
+                  inputs:
+                    deploymentScope: 'Resource Group'
+                    azureResourceManagerConnection: $(azureResourceManagerConnection)
+                    subscriptionId: $(subscriptionId)
+                    action: 'Create Or Update Resource Group'
+                    resourceGroupName: $(resourceGroupName)
+                    location: $(location)
+                    templateLocation: 'Linked artifact'
+                    csmFile: '$(Pipeline.Workspace)/drop/resourceGroup.docker.iac.json'
+                    deploymentMode: 'Incremental'
+                    deploymentName: 'continuous-deployment'
+                    overrideParameters: '-dockerRegistryUrl "$(dockerRegistryUrl)" -dockerRegistryUser "$(dockerRegistryUser)" -dockerRegistryPassword "$(dockerRegistryPassword)"'
+
+                - task: AzureFunctionAppContainer@1
+                  displayName: Deploy function app as container
+                  inputs:
+                    azureSubscription: $(azureResourceManagerConnection)
+                    appName: $(appName)
+                    imageName: '$(dockerRegistryUrl)/sensor-app:$(Build.BuildNumber)'
+                    appSettings: '-FUNCTIONS_EXTENSION_VERSION ~3'
