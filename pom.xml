@@ -94,16 +94,6 @@
         </dependency>
     </dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.microsoft.azure</groupId>
-                <artifactId>applicationinsights-core</artifactId>
-                <version>2.6.3</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
