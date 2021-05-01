@@ -13,11 +13,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>11</java.version>
         <kotlin.version>1.5.0</kotlin.version>
         <functions.version>1.4.2</functions.version>
         <functions.plugin.version>1.9.2</functions.plugin.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <stagingDirectory>${project.build.directory}/azure-functions/${functionAppName}</stagingDirectory>
         <functionAppName>sensor-app</functionAppName>
         <functionAppRegion>westeurope</functionAppRegion>
@@ -217,6 +216,13 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+
+                <configuration>
+                    <args>
+                        <arg>-Xjsr305=strict</arg>
+                    </args>
+                    <jvmTarget>${java.version}</jvmTarget>
+                </configuration>
 
                 <executions>
                     <execution>
