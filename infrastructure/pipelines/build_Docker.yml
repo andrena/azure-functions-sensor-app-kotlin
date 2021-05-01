@@ -3,7 +3,7 @@ trigger:
   batch: true
   branches:
     include:
-      - master
+      - main
 
 stages:
   - stage: Build
@@ -25,7 +25,7 @@ stages:
               jdkVersionOption: '1.11'
               jdkArchitectureOption: 'x64'
               goals: 'clean package'
-              
+
           - task: Docker@2
             displayName: 'Build Docker image'
             inputs:
@@ -55,7 +55,7 @@ stages:
           - task: CopyFiles@2
             displayName: 'Copy resource template to artifacts'
             inputs:
-              SourceFolder: infrastructure/templates 
+              SourceFolder: infrastructure/templates
               Contents: '*.json'
               TargetFolder: '$(build.artifactstagingdirectory)'
 
@@ -63,7 +63,7 @@ stages:
             displayName: 'Publish Artifact: drop'
             artifact: drop
             condition: succeededOrFailed()
-  
+
   - stage: Deploy
     displayName: Deploy function app
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))

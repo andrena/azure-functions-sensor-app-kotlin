@@ -3,7 +3,7 @@ trigger:
   batch: true
   branches:
     include:
-      - master
+      - main
 
 stages:
   - stage: Build
@@ -36,7 +36,7 @@ stages:
           - task: CopyFiles@2
             displayName: 'Copy resource template to artifacts'
             inputs:
-              SourceFolder: infrastructure/templates 
+              SourceFolder: infrastructure/templates
               Contents: resourceGroup.iac.json
               TargetFolder: '$(build.artifactstagingdirectory)'
 
@@ -44,7 +44,7 @@ stages:
             displayName: 'Publish Artifact: drop'
             artifact: drop
             condition: succeededOrFailed()
-  
+
   - stage: Deploy
     displayName: Deploy function app
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
