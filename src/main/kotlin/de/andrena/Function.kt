@@ -1,8 +1,11 @@
 package de.andrena
 
-import java.util.*
 import com.microsoft.azure.functions.*
-import com.microsoft.azure.functions.annotation.*
+import com.microsoft.azure.functions.annotation.AuthorizationLevel
+import com.microsoft.azure.functions.annotation.FunctionName
+import com.microsoft.azure.functions.annotation.HttpTrigger
+import de.andrena.util.respondWith
+import java.util.*
 
 /**
  * Azure Functions with HTTP Trigger.
@@ -18,28 +21,19 @@ class Function {
      */
     @FunctionName("HttpTrigger-Java")
     fun run(
-            @HttpTrigger(
-                    name = "req",
-                    methods = [HttpMethod.GET, HttpMethod.POST],
-                    authLevel = AuthorizationLevel.FUNCTION) request: HttpRequestMessage<Optional<String>>,
-            context: ExecutionContext): HttpResponseMessage {
-
+        @HttpTrigger(name = "req", methods = [HttpMethod.GET, HttpMethod.POST], authLevel = AuthorizationLevel.FUNCTION)
+        request: HttpRequestMessage<Optional<String>>,
+        context: ExecutionContext,
+    ): HttpResponseMessage {
         context.logger.info("HTTP trigger processed a ${request.httpMethod.name} request.")
 
-        val query = request.queryParameters["name"]
-        val name = request.body.orElse(query)
+        val name = request.run { body.orElse(queryParameters["name"]) }
+            ?: return request.respondWith(
+                status = HttpStatus.BAD_REQUEST,
+                body = "Please pass a name on the query string or in the request body",
+            )
 
-        name?.let {
-            return request
-                    .createResponseBuilder(HttpStatus.OK)
-                    .body("Hello, $name!")
-                    .build()
-        }
-
-        return request
-                .createResponseBuilder(HttpStatus.BAD_REQUEST)
-                .body("Please pass a name on the query string or in the request body")
-                .build()
+        return request.respondWith(status = HttpStatus.OK, body = "Hello, $name!")
     }
 
 }
