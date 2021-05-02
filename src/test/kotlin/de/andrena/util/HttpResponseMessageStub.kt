@@ -1,4 +1,4 @@
-package de.andrena
+package de.andrena.util
 
 import com.microsoft.azure.functions.HttpResponseMessage
 import com.microsoft.azure.functions.HttpStatusType

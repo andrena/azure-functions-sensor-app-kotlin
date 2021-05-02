@@ -4,7 +4,6 @@ import com.microsoft.azure.functions.HttpMethod
 import com.microsoft.azure.functions.HttpMethod.GET
 import com.microsoft.azure.functions.HttpMethod.POST
 import com.microsoft.azure.functions.HttpRequestMessage
-import de.andrena.HttpResponseMessageStub
 import io.mockk.every
 import io.mockk.mockk
 
