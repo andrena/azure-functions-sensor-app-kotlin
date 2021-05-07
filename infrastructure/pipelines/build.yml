@@ -82,4 +82,4 @@ stages:
                     appName: $(appName)
                     package: '$(Pipeline.Workspace)/drop/package'
                     appSettings: '-FUNCTIONS_EXTENSION_VERSION ~3'
-                    runtimeStack: 'DOCKER|mcr.microsoft.com/azure-functions/java:3.0-java11-appservice'
+                    runtimeStack: 'JAVA|11'

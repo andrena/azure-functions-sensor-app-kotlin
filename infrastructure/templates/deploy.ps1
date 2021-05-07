@@ -34,7 +34,7 @@ param(
  [string]
  $resourceGroupLocation,
 
-  [string]
+ [string]
  $deploymentName = "test-deployment",
 
  [string]
@@ -49,7 +49,7 @@ $ErrorActionPreference = "Stop"
 
 # sign in
 Write-Host "Logging in...";
-#Connect-AzAccount
+Connect-AzAccount
 
 # select subscription
 Write-Host "Selecting subscription '$subscriptionId'";
