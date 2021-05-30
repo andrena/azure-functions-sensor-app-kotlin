@@ -6,14 +6,19 @@ import com.microsoft.azure.functions.HttpMethod.POST
 import com.microsoft.azure.functions.HttpRequestMessage
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 fun preconfiguredGetRequest(queryParameters: Map<String, String> = mapOf()): HttpRequestMessage<Nothing> =
     preconfiguredRequest<Nothing>(httpMethod = GET).also {
         every { it.queryParameters } returns queryParameters
     }
 
-fun <T> preconfiguredPostRequest(body: T): HttpRequestMessage<T> =
-    preconfiguredRequest<T>(httpMethod = POST).also {
+inline fun <reified T> preconfiguredPostAsJsonRequest(body: T): HttpRequestMessage<String?> =
+    preconfiguredPostRequest(body = Json.encodeToString(body))
+
+fun preconfiguredPostRequest(body: String?): HttpRequestMessage<String?> =
+    preconfiguredRequest<String?>(httpMethod = POST).also {
         every { it.body } returns body
     }
 
