@@ -11,19 +11,8 @@ import org.junit.jupiter.api.Test
 class FunctionTest {
 
     @Test
-    fun `get without queryParameter name returns BadRequest`() {
-        val request = preconfiguredGetRequest(queryParameters = emptyMap())
-
-        val response = Function().get(request, mockContext())
-
-        response.status shouldBe BAD_REQUEST
-    }
-
-    @Test
     fun `get with queryParameter name returns Ok`() {
-        val request = preconfiguredGetRequest(queryParameters = mapOf("name" to "Azure"))
-
-        val response = Function().get(request, mockContext())
+        val response = Function().get(preconfiguredGetRequest(), mockContext(), name = "Azure")
 
         response.status shouldBe OK
     }

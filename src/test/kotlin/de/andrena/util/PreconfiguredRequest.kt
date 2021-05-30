@@ -7,7 +7,7 @@ import com.microsoft.azure.functions.HttpRequestMessage
 import io.mockk.every
 import io.mockk.mockk
 
-fun preconfiguredGetRequest(queryParameters: Map<String, String>): HttpRequestMessage<Nothing> =
+fun preconfiguredGetRequest(queryParameters: Map<String, String> = mapOf()): HttpRequestMessage<Nothing> =
     preconfiguredRequest<Nothing>(httpMethod = GET).also {
         every { it.queryParameters } returns queryParameters
     }
