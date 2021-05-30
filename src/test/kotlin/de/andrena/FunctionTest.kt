@@ -13,7 +13,7 @@ class FunctionTest {
 
     @Test
     fun `get with queryParameter name returns Ok`() {
-        val response = Function().get(preconfiguredGetRequest(), mockContext(), name = "Azure")
+        val response = get(preconfiguredGetRequest(), mockContext(), name = "Azure")
 
         response.status shouldBe OK
     }
@@ -22,7 +22,7 @@ class FunctionTest {
     fun `post without body returns BadRequest`() {
         val request = preconfiguredPostRequest(body = null)
 
-        val response = Function().post(request, mockContext())
+        val response = post(request, mockContext())
 
         response.status shouldBe BAD_REQUEST
     }
@@ -31,7 +31,7 @@ class FunctionTest {
     fun `post without name in body returns BadRequest`() {
         val request = preconfiguredPostRequest(body = "{}")
 
-        val response = Function().post(request, mockContext())
+        val response = post(request, mockContext())
 
         response.status shouldBe BAD_REQUEST
     }
@@ -40,7 +40,7 @@ class FunctionTest {
     fun `post with name in body returns Ok`() {
         val request = preconfiguredPostAsJsonRequest(Body(name = "Kotlin"))
 
-        val response = Function().post(request, mockContext())
+        val response = post(request, mockContext())
 
         response.status shouldBe OK
     }
