@@ -5,10 +5,7 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel
 import com.microsoft.azure.functions.annotation.BindingName
 import com.microsoft.azure.functions.annotation.FunctionName
 import com.microsoft.azure.functions.annotation.HttpTrigger
-import de.andrena.util.decodeBodyAs
-import de.andrena.util.json.DeserializationResult.Error
-import de.andrena.util.json.DeserializationResult.Ok
-import de.andrena.util.respondBadRequest
+import de.andrena.util.deserializeBodyAs
 import de.andrena.util.respondWith
 import kotlinx.serialization.Serializable
 
@@ -35,13 +32,8 @@ fun post(
     @HttpTrigger(name = "request", methods = [HttpMethod.POST], authLevel = AuthorizationLevel.FUNCTION)
     request: HttpRequestMessage<String?>,
     context: ExecutionContext,
-): HttpResponseMessage = request.run {
+): HttpResponseMessage = request.deserializeBodyAs<Body> {
     context.logger.info("HTTP trigger processed a POST request.")
-
-    val body = when (val result = decodeBodyAs<Body>()) {
-        is Error -> return respondBadRequest(message = result.message)
-        is Ok -> result.value
-    }
 
     return respondWith(status = HttpStatus.OK, body = "Hello, ${body.name}!")
 }
