@@ -47,8 +47,8 @@ class AggregatedInput(
     @Contextual
     private val timestamp: Instant,
     private val sensorType: String,
-    private val min: Double?,
-    private val max: Double?,
-    private val average: Double?,
-    private val standardDeviation: Double?,
+    private val min: Double,
+    private val max: Double,
+    private val average: Double,
+    private val standardDeviation: Double,
 )
