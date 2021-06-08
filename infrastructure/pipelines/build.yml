@@ -17,11 +17,10 @@ stages:
           - checkout: self
             clean: true
 
-          - task: Npm@1
-            displayName: 'Update Azure Functions core tools'
+          - task: FuncToolsInstaller@0
+            displayName: 'Install latest Azure Functions core tools'
             inputs:
-              command: 'custom'
-              customCommand: 'install -g azure-functions-core-tools --unsafe-perm true'
+              version: 'latest'
 
           - task: Maven@3
             inputs:
