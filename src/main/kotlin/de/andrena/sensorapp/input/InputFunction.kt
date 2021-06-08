@@ -4,7 +4,6 @@ import com.microsoft.azure.functions.*
 import com.microsoft.azure.functions.annotation.AuthorizationLevel
 import com.microsoft.azure.functions.annotation.FunctionName
 import com.microsoft.azure.functions.annotation.HttpTrigger
-import de.andrena.sensorapp.input.domain.Input
 import de.andrena.util.deserializeBodyAs
 import de.andrena.util.respondJson
 

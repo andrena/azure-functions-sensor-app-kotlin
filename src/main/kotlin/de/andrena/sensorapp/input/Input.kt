@@ -1,4 +1,4 @@
-package de.andrena.sensorapp.input.domain
+package de.andrena.sensorapp.input
 
 import de.andrena.util.lang.averageOrNull
 import de.andrena.util.lang.stdDev
@@ -8,10 +8,10 @@ import java.time.Instant
 
 @Serializable
 class Input(
-    val boxId: String,
+    private val sensorBoxId: String,
     @Contextual
-    val sensedAt: Instant,
-    val data: List<Data>,
+    private val timestamp: Instant,
+    private val data: List<SensorData>,
 ) {
 
     fun aggregate(): List<AggregatedInput> =
@@ -21,9 +21,9 @@ class Input(
             }
 
             AggregatedInput(
-                boxId = boxId,
-                sensedAt = sensedAt,
-                sensorType = data.sensorType,
+                sensorBoxId = sensorBoxId,
+                timestamp = timestamp,
+                sensorType = data.type,
                 min = data.values.minOrNull(),
                 max = data.values.maxOrNull(),
                 average = data.values.averageOrNull(),
@@ -32,17 +32,17 @@ class Input(
         }.filterNotNull()
 
     @Serializable
-    class Data(
-        val sensorType: String,
+    class SensorData(
+        val type: String,
         val values: List<Double>,
     )
 }
 
 @Serializable
 class AggregatedInput(
-    val boxId: String,
+    val sensorBoxId: String,
     @Contextual
-    val sensedAt: Instant,
+    val timestamp: Instant,
     val sensorType: String,
     val min: Double?,
     val max: Double?,
