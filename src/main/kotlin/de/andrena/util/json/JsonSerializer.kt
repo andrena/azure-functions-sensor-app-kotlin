@@ -4,6 +4,7 @@ import de.andrena.util.json.DeserializationResult.Error
 import de.andrena.util.json.DeserializationResult.Ok
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
@@ -24,3 +25,6 @@ sealed class DeserializationResult<out T> {
     class Ok<T>(val value: T) : DeserializationResult<T>()
     class Error(val message: String) : DeserializationResult<Nothing>()
 }
+
+inline fun <reified T> T.encodedAsJson(): String =
+    jsonSerializer.encodeToString(this)
