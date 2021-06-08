@@ -16,18 +16,21 @@ class Input(
 
     fun aggregate(): List<AggregatedInput> =
         data.map { data ->
-            if (data.values.isEmpty()) {
+            val sensorType = data.type
+            val sensorValues = data.values
+
+            if (sensorValues.isEmpty()) {
                 return@map null
             }
 
             AggregatedInput(
                 sensorBoxId = sensorBoxId,
                 timestamp = timestamp,
-                sensorType = data.type,
-                min = data.values.minOrNull(),
-                max = data.values.maxOrNull(),
-                average = data.values.averageOrNull(),
-                standardDeviation = data.values.stdDev(),
+                sensorType = sensorType,
+                min = sensorValues.minOrNull()!!,
+                max = sensorValues.maxOrNull()!!,
+                average = sensorValues.averageOrNull()!!,
+                standardDeviation = sensorValues.stdDev()!!,
             )
         }.filterNotNull()
 
@@ -40,12 +43,12 @@ class Input(
 
 @Serializable
 class AggregatedInput(
-    val sensorBoxId: String,
+    private val sensorBoxId: String,
     @Contextual
-    val timestamp: Instant,
-    val sensorType: String,
-    val min: Double?,
-    val max: Double?,
-    val average: Double?,
-    val standardDeviation: Double?,
+    private val timestamp: Instant,
+    private val sensorType: String,
+    private val min: Double?,
+    private val max: Double?,
+    private val average: Double?,
+    private val standardDeviation: Double?,
 )
