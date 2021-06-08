@@ -17,6 +17,11 @@ stages:
           - checkout: self
             clean: true
 
+          - task: Npm@1
+            inputs:
+              command: 'custom'
+              customCommand: 'install -g azure-functions-core-tools'
+
           - task: Maven@3
             inputs:
               mavenPomFile: 'pom.xml'
