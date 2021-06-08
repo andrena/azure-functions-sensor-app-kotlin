@@ -9,8 +9,8 @@ import de.andrena.util.deserializeBodyAs
 import de.andrena.util.json.encodedAsJson
 import de.andrena.util.respondJson
 
-@FunctionName("aggregate-input")
-fun aggregateInput(
+@FunctionName("SensorInput")
+fun sensorInput(
     @HttpTrigger(name = "request", methods = [HttpMethod.POST], authLevel = AuthorizationLevel.ANONYMOUS)
     request: HttpRequestMessage<String?>,
     @QueueOutput(name = "output", queueName = "aggregated-sensor-data", connection = "AzureWebJobsStorage")
