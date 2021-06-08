@@ -18,9 +18,10 @@ stages:
             clean: true
 
           - task: Npm@1
+            displayName: 'Update Azure Functions core tools'
             inputs:
               command: 'custom'
-              customCommand: 'install -g azure-functions-core-tools'
+              customCommand: 'install -g azure-functions-core-tools --unsafe-perm true'
 
           - task: Maven@3
             inputs:
