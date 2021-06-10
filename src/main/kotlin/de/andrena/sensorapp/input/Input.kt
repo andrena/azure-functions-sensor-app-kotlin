@@ -4,13 +4,13 @@ import de.andrena.util.lang.averageOrNull
 import de.andrena.util.lang.stdDev
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import java.time.Instant
+import java.time.OffsetDateTime
 
 @Serializable
 class Input(
     private val sensorBoxId: String,
     @Contextual
-    private val timestamp: Instant,
+    private val timestamp: OffsetDateTime,
     private val data: List<SensorData>,
 ) {
 
@@ -45,7 +45,7 @@ class Input(
 class AggregatedInput(
     private val sensorBoxId: String,
     @Contextual
-    private val timestamp: Instant,
+    private val timestamp: OffsetDateTime,
     private val sensorType: String,
     private val min: Double,
     private val max: Double,

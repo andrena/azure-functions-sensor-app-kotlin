@@ -11,7 +11,7 @@ import kotlinx.serialization.modules.contextual
 
 val jsonSerializer = Json {
     serializersModule = SerializersModule {
-        contextual(InstantSerializer)
+        contextual(OffsetDateTimeSerializer)
     }
 }
 
