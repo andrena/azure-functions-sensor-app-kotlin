@@ -5,7 +5,8 @@ import com.microsoft.azure.functions.OutputBinding
 import com.microsoft.azure.functions.annotation.FunctionName
 import com.microsoft.azure.functions.annotation.QueueOutput
 import com.microsoft.azure.functions.annotation.QueueTrigger
-import de.andrena.sensorapp.Sensor
+import de.andrena.sensorapp.sensor.Sensor
+import de.andrena.sensorapp.sensor.SensorRepository
 import de.andrena.util.json.DeserializationResult
 import de.andrena.util.json.decodeJson
 
@@ -36,7 +37,8 @@ fun validation(
 private fun validate(aggregatedSensorData: AggregatedSensorData, context: ExecutionContext): ValidationResult {
     context.logger.info("Validating aggregatedSensorData. $aggregatedSensorData")
 
-    val sensor = Sensor(min = 1.0, max = 5.0) // TODO: get Sensor from storage
+    val sensor = SensorRepository.getByIdAndType(aggregatedSensorData.sensorBoxId, aggregatedSensorData.sensorType)
+        ?: return ValidationResult.Error("No sensor found for id=${aggregatedSensorData.sensorBoxId}")
 
     if (aggregatedSensorData.isValidFor(sensor))
         return ValidationResult.Ok

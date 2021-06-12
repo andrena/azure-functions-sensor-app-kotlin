@@ -1,16 +1,16 @@
 package de.andrena.sensorapp.validation
 
-import de.andrena.sensorapp.Sensor
+import de.andrena.sensorapp.sensor.Sensor
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import java.time.OffsetDateTime
 
 @Serializable
 class AggregatedSensorData(
-    private val sensorBoxId: String,
+    val sensorBoxId: String,
     @Contextual
     private val timestamp: OffsetDateTime,
-    private val sensorType: String,
+    val sensorType: String,
     private val min: Double,
     private val max: Double,
     private val average: Double,

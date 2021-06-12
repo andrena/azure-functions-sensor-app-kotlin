@@ -52,11 +52,27 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.8.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>com.microsoft.azure.functions</groupId>
             <artifactId>azure-functions-java-library</artifactId>
             <version>${functions.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>azure-storage</artifactId>
+            <version>8.6.6</version>
         </dependency>
 
         <dependency>
@@ -232,8 +248,14 @@
                         <arg>-Xjsr305=strict</arg>
                     </args>
                     <compilerPlugins>
+                        <plugin>no-arg</plugin>
                         <plugin>kotlinx-serialization</plugin>
                     </compilerPlugins>
+
+                    <pluginOptions>
+                        <option>no-arg:annotation=de.andrena.util.annotation.NoArg</option>
+                    </pluginOptions>
+
                     <jvmTarget>${java.version}</jvmTarget>
                 </configuration>
 
@@ -254,6 +276,12 @@
                 </executions>
 
                 <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-noarg</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-serialization</artifactId>
