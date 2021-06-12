@@ -18,6 +18,9 @@ inline fun <T, reified R> HttpRequestMessage<T>.respondJson(status: HttpStatus, 
 fun <T> HttpRequestMessage<T>.respondWith(status: HttpStatus, body: Any): HttpResponseMessage =
     this.createResponseBuilder(status).body(body).build()
 
+fun <T> HttpRequestMessage<T>.respondWith(status: HttpStatus): HttpResponseMessage =
+    this.createResponseBuilder(status).build()
+
 typealias AzureFunction<T> = HttpRequestMessage<T>.() -> HttpResponseMessage
 
 inline fun <reified T : Any> HttpRequestMessage<String?>.deserializeBodyAs(block: AzureFunction<T>): HttpResponseMessage {

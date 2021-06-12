@@ -5,9 +5,14 @@ import de.andrena.sensorapp.sensor.Sensor.Companion.BOX_ID_COLUMN
 import de.andrena.sensorapp.sensor.Sensor.Companion.TYPE_COLUMN
 import de.andrena.util.storage.cloud.table.TableQueryExt.column
 import de.andrena.util.storage.cloud.table.cloudTableClient
+import de.andrena.util.storage.cloud.table.insert
 import de.andrena.util.storage.cloud.table.queryFirstOrNull
 
 object SensorRepository {
+
+    fun insert(sensor: Sensor) {
+        sensorsTable().insert(sensor)
+    }
 
     fun getByIdAndType(id: String, type: String): Sensor? =
         sensorsTable().queryFirstOrNull {
