@@ -8,10 +8,10 @@ import java.time.OffsetDateTime
 
 @Serializable
 class Input(
-    private val sensorBoxId: String,
+    val sensorBoxId: String,
     @Contextual
-    private val timestamp: OffsetDateTime,
-    private val data: List<SensorData>,
+    val timestamp: OffsetDateTime,
+    val data: List<SensorData>,
 ) {
 
     fun aggregate(): List<AggregatedInput> =

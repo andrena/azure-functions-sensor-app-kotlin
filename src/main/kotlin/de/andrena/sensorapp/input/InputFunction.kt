@@ -9,12 +9,14 @@ import de.andrena.util.deserializeBodyAs
 import de.andrena.util.json.encodedAsJson
 import de.andrena.util.respondJson
 
+typealias AggregatedSensorDataOutput = OutputBinding<List<String>>
+
 @FunctionName("SensorInput")
 fun sensorInput(
     @HttpTrigger(name = "request", methods = [HttpMethod.POST], authLevel = AuthorizationLevel.ANONYMOUS)
     request: HttpRequestMessage<String?>,
     @QueueOutput(name = "output", queueName = "aggregated-sensor-data", connection = "AzureWebJobsStorage")
-    output: OutputBinding<List<String>>,
+    output: AggregatedSensorDataOutput,
     context: ExecutionContext,
 ): HttpResponseMessage = request.deserializeBodyAs<Input> {
     context.logger.info("Processing input.")
