@@ -2,8 +2,7 @@ package de.andrena.util
 
 import com.microsoft.azure.functions.*
 import com.microsoft.azure.functions.HttpStatus.BAD_REQUEST
-import de.andrena.util.json.DeserializationResult.Error
-import de.andrena.util.json.DeserializationResult.Ok
+import com.microsoft.azure.functions.HttpStatus.INTERNAL_SERVER_ERROR
 import de.andrena.util.json.decodeJson
 import de.andrena.util.json.jsonSerializer
 import kotlinx.serialization.encodeToString
@@ -11,6 +10,9 @@ import java.net.URI
 
 fun <T> HttpRequestMessage<T>.respondBadRequest(message: String): HttpResponseMessage =
     this.respondWith(BAD_REQUEST, body = message)
+
+fun <T> HttpRequestMessage<T>.respondInternalServerError(message: String): HttpResponseMessage =
+    this.respondWith(INTERNAL_SERVER_ERROR, body = message)
 
 inline fun <T, reified R> HttpRequestMessage<T>.respondJson(status: HttpStatus, body: R): HttpResponseMessage =
     this.createResponseBuilder(status).body(jsonSerializer.encodeToString(body)).build()
@@ -21,46 +23,38 @@ fun <T> HttpRequestMessage<T>.respondWith(status: HttpStatus, body: Any): HttpRe
 fun <T> HttpRequestMessage<T>.respondWith(status: HttpStatus): HttpResponseMessage =
     this.createResponseBuilder(status).build()
 
-typealias AzureFunction<T> = HttpRequestMessage<T>.() -> HttpResponseMessage
-
-inline fun <reified T : Any> HttpRequestMessage<String?>.deserializeBodyAs(block: AzureFunction<T>): HttpResponseMessage {
-    val request: HttpRequestMessage<T> = this.convertTo { body: String? ->
+inline fun <reified T : Any> HttpRequestMessage<String?>.convertJsonBodyTo(): HttpRequestMessage<T> =
+    this.convertBodyTo { body: String? ->
         if (body == null) {
-            return respondBadRequest(message = "body must not be null")
+            throw IllegalArgumentException("body must not be null")
         }
 
-        when (val result = body.decodeJson<T>()) {
-            is Error -> return respondBadRequest(message = result.message)
-            is Ok -> result.value
-        }
+        body.decodeJson()
     }
 
-    return request.block()
-}
-
-inline fun <reified T, reified R> HttpRequestMessage<T>.convertTo(convert: (T) -> R): HttpRequestMessage<R> {
+inline fun <reified T, reified R> HttpRequestMessage<T>.convertBodyTo(convert: (T) -> R): HttpRequestMessage<R> {
     val body = convert(body)
 
     return object : HttpRequestMessage<R> {
         override fun getUri(): URI =
-            this@convertTo.uri
+            this@convertBodyTo.uri
 
         override fun getHttpMethod(): HttpMethod =
-            this@convertTo.httpMethod
+            this@convertBodyTo.httpMethod
 
         override fun getHeaders(): MutableMap<String, String> =
-            this@convertTo.headers
+            this@convertBodyTo.headers
 
         override fun getQueryParameters(): MutableMap<String, String> =
-            this@convertTo.queryParameters
+            this@convertBodyTo.queryParameters
 
         override fun getBody(): R =
             body
 
         override fun createResponseBuilder(httpStatus: HttpStatus): HttpResponseMessage.Builder =
-            this@convertTo.createResponseBuilder(httpStatus)
+            this@convertBodyTo.createResponseBuilder(httpStatus)
 
         override fun createResponseBuilder(httpStatusType: HttpStatusType): HttpResponseMessage.Builder =
-            this@convertTo.createResponseBuilder(httpStatusType)
+            this@convertBodyTo.createResponseBuilder(httpStatusType)
     }
 }
