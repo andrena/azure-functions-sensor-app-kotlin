@@ -5,7 +5,6 @@ import com.microsoft.azure.functions.OutputBinding
 import com.microsoft.azure.functions.annotation.FunctionName
 import com.microsoft.azure.functions.annotation.QueueOutput
 import com.microsoft.azure.functions.annotation.QueueTrigger
-import de.andrena.sensorapp.sensor.Sensor
 import de.andrena.sensorapp.sensor.SensorRepository
 import de.andrena.util.json.DeserializationResult
 import de.andrena.util.json.decodeJson
