@@ -2,6 +2,7 @@ package de.andrena.util
 
 import com.microsoft.azure.functions.*
 import com.microsoft.azure.functions.HttpStatus.BAD_REQUEST
+import com.microsoft.azure.functions.HttpStatus.INTERNAL_SERVER_ERROR
 import de.andrena.util.json.DeserializationResult.Error
 import de.andrena.util.json.DeserializationResult.Ok
 import de.andrena.util.json.decodeJson
@@ -11,6 +12,9 @@ import java.net.URI
 
 fun <T> HttpRequestMessage<T>.respondBadRequest(message: String): HttpResponseMessage =
     this.respondWith(BAD_REQUEST, body = message)
+
+fun <T> HttpRequestMessage<T>.respondInternalServerError(message: String): HttpResponseMessage =
+    this.respondWith(INTERNAL_SERVER_ERROR, body = message)
 
 inline fun <T, reified R> HttpRequestMessage<T>.respondJson(status: HttpStatus, body: R): HttpResponseMessage =
     this.createResponseBuilder(status).body(jsonSerializer.encodeToString(body)).build()
