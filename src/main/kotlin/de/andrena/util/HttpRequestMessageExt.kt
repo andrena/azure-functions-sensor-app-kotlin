@@ -26,11 +26,11 @@ typealias AzureFunction<T> = HttpRequestMessage<T>.() -> HttpResponseMessage
 inline fun <reified T : Any> HttpRequestMessage<String?>.deserializeBodyAs(block: AzureFunction<T>): HttpResponseMessage {
     val request: HttpRequestMessage<T> = this.convertTo { body: String? ->
         if (body == null) {
-            return respondBadRequest(message = "body must not be null")
+            throw IllegalArgumentException("body must not be null")
         }
 
         when (val result = body.decodeJson<T>()) {
-            is Error -> return respondBadRequest(message = result.message)
+            is Error -> throw IllegalArgumentException(result.message)
             is Ok -> result.value
         }
     }
