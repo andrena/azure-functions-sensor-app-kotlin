@@ -3,8 +3,8 @@ package de.andrena.sensorapp.sensor
 import com.microsoft.azure.storage.table.CloudTable
 import de.andrena.sensorapp.sensor.Sensor.Companion.BOX_ID_COLUMN
 import de.andrena.sensorapp.sensor.Sensor.Companion.TYPE_COLUMN
+import de.andrena.util.storage.cloud.table.CloudTableClient
 import de.andrena.util.storage.cloud.table.TableQueryExt.column
-import de.andrena.util.storage.cloud.table.cloudTableClient
 import de.andrena.util.storage.cloud.table.insert
 import de.andrena.util.storage.cloud.table.queryFirstOrNull
 
@@ -23,6 +23,6 @@ object SensorRepository {
         }
 
     private fun sensorsTable(): CloudTable =
-        cloudTableClient.getTableReference("sensors")
+        CloudTableClient.table("sensors")
 
 }

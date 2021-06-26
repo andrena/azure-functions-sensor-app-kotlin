@@ -1,9 +1,19 @@
 package de.andrena.util.storage.cloud.table
 
 import com.microsoft.azure.storage.CloudStorageAccount
-import com.microsoft.azure.storage.table.CloudTableClient
+import com.microsoft.azure.storage.table.CloudTable
+import com.microsoft.azure.storage.table.CloudTableClient as AzureCloudTableClient
 
-private val storageConnectionString: String =
-    System.getenv("AzureWebJobsStorage")
+object CloudTableClient {
+    private val storageConnectionString: String by lazy {
+        System.getenv("AzureWebJobsStorage")
+    }
 
-val cloudTableClient: CloudTableClient = CloudStorageAccount.parse(storageConnectionString).createCloudTableClient()
+    private val cloudTableClient: AzureCloudTableClient by lazy {
+        CloudStorageAccount.parse(storageConnectionString).createCloudTableClient()
+    }
+
+    fun table(name: String): CloudTable =
+        cloudTableClient.getTableReference(name)
+
+}
