@@ -15,6 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
         <kotlin.version>1.5.0</kotlin.version>
+        <koin.version>2.2.3</koin.version>
         <kotlinx.serialization.version>1.2.1</kotlinx.serialization.version>
         <functions.version>1.4.2</functions.version>
         <functions.plugin.version>1.9.2</functions.plugin.version>
@@ -91,6 +92,18 @@
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-serialization-json</artifactId>
             <version>${kotlinx.serialization.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.insert-koin</groupId>
+            <artifactId>koin-core</artifactId>
+            <version>${koin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.insert-koin</groupId>
+            <artifactId>koin-core-ext</artifactId>
+            <version>${koin.version}</version>
         </dependency>
 
         <dependency>

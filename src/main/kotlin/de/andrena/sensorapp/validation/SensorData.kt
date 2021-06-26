@@ -9,12 +9,12 @@ import java.time.OffsetDateTime
 class AggregatedSensorData(
     val sensorBoxId: String,
     @Contextual
-    private val timestamp: OffsetDateTime,
+    val timestamp: OffsetDateTime,
     val sensorType: String,
-    private val min: Double,
-    private val max: Double,
-    private val average: Double,
-    private val standardDeviation: Double,
+    val min: Double,
+    val max: Double,
+    val average: Double,
+    val standardDeviation: Double,
 ) {
     fun isValidFor(sensor: Sensor): Boolean =
         min >= sensor.min && max <= sensor.max
