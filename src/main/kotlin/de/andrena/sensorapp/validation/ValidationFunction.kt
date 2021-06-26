@@ -6,7 +6,6 @@ import com.microsoft.azure.functions.annotation.FunctionName
 import com.microsoft.azure.functions.annotation.QueueOutput
 import com.microsoft.azure.functions.annotation.QueueTrigger
 import de.andrena.sensorapp.sensor.SensorRepository
-import de.andrena.util.json.DeserializationResult
 import de.andrena.util.json.decodeJson
 
 @FunctionName("validation")
@@ -17,15 +16,14 @@ fun validation(
     output: OutputBinding<String>,
     context: ExecutionContext,
 ) {
-    val validationResult = when (val result = aggregatedSensorData.decodeJson<AggregatedSensorData>()) {
-        is DeserializationResult.Error -> {
-            context.logger.severe("Unable to decode AggregatedSensorData={$aggregatedSensorData}: ${result.message}")
-            return
-        }
-        is DeserializationResult.Ok -> validate(result.value, context)
+    val decodedAggregatedSensorData = try {
+        aggregatedSensorData.decodeJson<AggregatedSensorData>()
+    } catch (ex: IllegalArgumentException) {
+        context.logger.severe("Unable to decode AggregatedSensorData={$aggregatedSensorData}: ${ex.message}")
+        return
     }
 
-    when (validationResult) {
+    when (val validationResult = validate(decodedAggregatedSensorData, context)) {
         is ValidationResult.Error -> {
             context.logger.severe("Validation failed for AggregatedSensorData={$aggregatedSensorData} ${validationResult.message}")
         }
