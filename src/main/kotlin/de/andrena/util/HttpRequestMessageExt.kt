@@ -23,7 +23,7 @@ fun <T> HttpRequestMessage<T>.respondWith(status: HttpStatus, body: Any): HttpRe
 fun <T> HttpRequestMessage<T>.respondWith(status: HttpStatus): HttpResponseMessage =
     this.createResponseBuilder(status).build()
 
-inline fun <reified T : Any> HttpRequestMessage<String?>.convertBodyTo(): HttpRequestMessage<T> =
+inline fun <reified T : Any> HttpRequestMessage<String?>.convertJsonBodyTo(): HttpRequestMessage<T> =
     this.convertBodyTo { body: String? ->
         if (body == null) {
             throw IllegalArgumentException("body must not be null")

@@ -5,7 +5,7 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel
 import com.microsoft.azure.functions.annotation.BindingName
 import com.microsoft.azure.functions.annotation.FunctionName
 import com.microsoft.azure.functions.annotation.HttpTrigger
-import de.andrena.util.functionWithRequestBody
+import de.andrena.util.functionWithJsonRequestBody
 import de.andrena.util.respondWith
 import kotlinx.serialization.Serializable
 
@@ -32,7 +32,7 @@ fun post(
     @HttpTrigger(name = "request", methods = [HttpMethod.POST], authLevel = AuthorizationLevel.FUNCTION)
     request: HttpRequestMessage<String?>,
     context: ExecutionContext,
-): HttpResponseMessage = functionWithRequestBody<Body>(request) {
+): HttpResponseMessage = functionWithJsonRequestBody<Body>(request) {
     context.logger.info("HTTP trigger processed a POST request.")
 
     respondWith(status = HttpStatus.OK, body = "Hello, ${body.name}!")

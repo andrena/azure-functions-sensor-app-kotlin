@@ -5,7 +5,7 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel
 import com.microsoft.azure.functions.annotation.FunctionName
 import com.microsoft.azure.functions.annotation.HttpTrigger
 import com.microsoft.azure.functions.annotation.QueueOutput
-import de.andrena.util.functionWithRequestBody
+import de.andrena.util.functionWithJsonRequestBody
 import de.andrena.util.json.encodedAsJson
 import de.andrena.util.respondJson
 
@@ -18,7 +18,7 @@ fun sensorInput(
     @QueueOutput(name = "output", queueName = "aggregated-sensor-data", connection = "AzureWebJobsStorage")
     output: AggregatedSensorDataOutput,
     context: ExecutionContext,
-): HttpResponseMessage = functionWithRequestBody<Input>(request) {
+): HttpResponseMessage = functionWithJsonRequestBody<Input>(request) {
     context.logger.info("Processing input.")
 
     val aggregatedInput = body.aggregate()

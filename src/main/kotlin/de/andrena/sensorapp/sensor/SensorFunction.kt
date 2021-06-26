@@ -4,7 +4,7 @@ import com.microsoft.azure.functions.*
 import com.microsoft.azure.functions.annotation.AuthorizationLevel
 import com.microsoft.azure.functions.annotation.FunctionName
 import com.microsoft.azure.functions.annotation.HttpTrigger
-import de.andrena.util.functionWithRequestBody
+import de.andrena.util.functionWithJsonRequestBody
 import de.andrena.util.respondWith
 
 @FunctionName("CreateSensor")
@@ -12,7 +12,7 @@ fun createSensor(
     @HttpTrigger(name = "request", methods = [HttpMethod.POST], authLevel = AuthorizationLevel.ANONYMOUS)
     request: HttpRequestMessage<String?>,
     context: ExecutionContext,
-): HttpResponseMessage = functionWithRequestBody<SensorTO>(request) {
+): HttpResponseMessage = functionWithJsonRequestBody<SensorTO>(request) {
     context.logger.info("Creating Sensor.")
 
     SensorRepository.insert(body.toSensor())
