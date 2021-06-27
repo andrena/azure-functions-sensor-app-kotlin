@@ -8,7 +8,7 @@ import org.koin.dsl.module
 object Startup {
     var writeData: org.koin.core.module.Module = module(override = true) {
         single {
-            TableStorageSensorDataRepository() as SensorDataRepository
+            TableStorageSensorDataRepository()
         }
     }
 

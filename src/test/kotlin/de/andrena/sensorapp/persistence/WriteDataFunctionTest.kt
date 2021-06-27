@@ -25,7 +25,7 @@ internal class WriteDataFunctionTest {
         })
         every { repositoryMock.insertBatch(any()) } returns PersistenceResult.Ok
 
-        dataPersistence(validatedData.encodedAsJson(), mockContext())
+        WriteDataFunction().dataPersistence(validatedData.encodedAsJson(), mockContext())
 
         repositoryMock.verifyInsertBatchWasCalledWith(
             listOf(
