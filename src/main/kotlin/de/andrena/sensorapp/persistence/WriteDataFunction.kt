@@ -16,7 +16,7 @@ class WriteDataFunction : KoinComponent {
 
     private val sensorDataRepository: SensorDataRepository by inject()
 
-    @FunctionName("dataPersistence")
+    @FunctionName("PersistSensorData")
     fun dataPersistence(
         @QueueTrigger(
             name = "validatedSensorData",

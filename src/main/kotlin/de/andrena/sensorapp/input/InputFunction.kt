@@ -11,7 +11,7 @@ import de.andrena.util.respondJson
 
 typealias AggregatedSensorDataOutput = OutputBinding<List<String>>
 
-@FunctionName("SensorInput")
+@FunctionName("ProcessSensorInput")
 fun sensorInput(
     @HttpTrigger(name = "request", methods = [HttpMethod.POST], authLevel = AuthorizationLevel.ANONYMOUS)
     request: HttpRequestMessage<String?>,

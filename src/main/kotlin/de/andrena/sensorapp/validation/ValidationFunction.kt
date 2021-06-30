@@ -8,7 +8,7 @@ import com.microsoft.azure.functions.annotation.QueueTrigger
 import de.andrena.sensorapp.sensor.SensorRepository
 import de.andrena.util.json.decodeJson
 
-@FunctionName("validation")
+@FunctionName("ValidateSensorData")
 fun validation(
     @QueueTrigger(name = "aggregatedSensorData", queueName = "aggregated-sensor-data", connection = "AzureWebJobsStorage")
     aggregatedSensorData: String,
