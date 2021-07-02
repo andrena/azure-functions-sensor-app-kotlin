@@ -12,6 +12,6 @@ fun AggregatedSensorData.toSensorData(aggregationType: String, value: Double) = 
 
 infix fun Collection<SensorData>.shouldContain(sensorData: SensorData) {
     shouldContain(sensorData) {
-        partitionKey == it.partitionKey && sensorType == it.sensorType && aggregationType == it.aggregationType && value == it.value
+        sensorBoxId == it.sensorBoxId && sensorType == it.sensorType && aggregationType == it.aggregationType && value == it.value
     }
 }

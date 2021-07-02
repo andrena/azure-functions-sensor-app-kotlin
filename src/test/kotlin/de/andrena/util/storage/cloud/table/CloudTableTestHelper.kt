@@ -12,3 +12,7 @@ fun CloudTable.verifyInsert() {
 fun CloudTable.verifyBatchInsert() {
     verify { execute(any<TableBatchOperation>()) }
 }
+
+fun CloudTable.verifyUpdate() {
+    verify { execute(any<TableOperation>()) }
+}

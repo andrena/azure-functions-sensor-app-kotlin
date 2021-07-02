@@ -16,7 +16,7 @@ class WriteDataFunction : KoinComponent {
 
     private val sensorDataRepository: SensorDataRepository by inject()
 
-    @FunctionName("PersistSensorData")
+    @FunctionName("SensorDataWriteFunction")
     fun dataPersistence(
         @QueueTrigger(
             name = "validatedSensorData",
@@ -29,7 +29,7 @@ class WriteDataFunction : KoinComponent {
         val decodedValidatedSensorData = try {
             validatedSensorData.decodeJson<AggregatedSensorData>()
         } catch (ex: IllegalArgumentException) {
-            context.logger.severe("Unable to decode AggregatedSensorData={$validatedSensorData}: ${ex.message}")
+            context.logger.severe("Unable to decode AggregatedSensorData=$validatedSensorData: ${ex.message}")
             return
         }
 
@@ -37,13 +37,13 @@ class WriteDataFunction : KoinComponent {
             is PersistenceResult.Error -> {
                 context.logger.severe("Unable to persist sensor data ${persistenceResult.message}")
             }
-            PersistenceResult.Ok -> context.logger.info("Successfully persisted sensor data")
+            PersistenceResult.Ok -> context.logger.fine("Successfully persisted sensor data.")
         }
 
     }
 
     private fun writeData(data: AggregatedSensorData, context: ExecutionContext): PersistenceResult {
-        context.logger.info("Persisting aggregatedSensorData. $data")
+        context.logger.fine("Persisting aggregatedSensorData. $data")
 
         val sensorData = listOf(
             createSensorData(data, "Min", data.min),

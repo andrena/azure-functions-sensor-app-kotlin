@@ -13,7 +13,7 @@ fun createSensor(
     request: HttpRequestMessage<String?>,
     context: ExecutionContext,
 ): HttpResponseMessage = functionWithJsonRequestBody<SensorTO>(request) {
-    context.logger.info("Creating Sensor.")
+    context.logger.fine("Creating sensor ${body}.")
 
     SensorRepository.insert(body.toSensor())
 

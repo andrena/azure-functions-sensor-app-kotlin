@@ -2,6 +2,7 @@ package de.andrena.util.storage.cloud.table
 
 import com.microsoft.azure.storage.table.TableEntity
 import com.microsoft.azure.storage.table.TableQuery
+import java.util.*
 
 object TableQueryExt {
 
@@ -18,6 +19,18 @@ object TableQueryExt {
 
         infix fun hasValue(value: String) =
             QueryCondition(TableQuery.generateFilterCondition(columnName, TableQuery.QueryComparisons.EQUAL, value))
+
+        infix fun isBefore(value: Date) =
+            QueryCondition(TableQuery.generateFilterCondition(columnName, TableQuery.QueryComparisons.LESS_THAN, value))
+
+        infix fun isOnOrBefore(value: Date) =
+            QueryCondition(TableQuery.generateFilterCondition(columnName, TableQuery.QueryComparisons.LESS_THAN_OR_EQUAL, value))
+
+        infix fun isAfter(value: Date) =
+            QueryCondition(TableQuery.generateFilterCondition(columnName, TableQuery.QueryComparisons.GREATER_THAN, value))
+
+        infix fun isOnOrAfter(value: Date) =
+            QueryCondition(TableQuery.generateFilterCondition(columnName, TableQuery.QueryComparisons.GREATER_THAN_OR_EQUAL, value))
 
     }
 

@@ -2,16 +2,21 @@ package de.andrena.sensorapp.sensor
 
 import com.microsoft.azure.storage.table.CloudTable
 import de.andrena.sensorapp.sensor.Sensor.Companion.BOX_ID_COLUMN
+import de.andrena.sensorapp.sensor.Sensor.Companion.LAST_SEEN_COLUMN
 import de.andrena.sensorapp.sensor.Sensor.Companion.TYPE_COLUMN
-import de.andrena.util.storage.cloud.table.CloudTableClient
+import de.andrena.util.storage.cloud.table.*
 import de.andrena.util.storage.cloud.table.TableQueryExt.column
-import de.andrena.util.storage.cloud.table.insert
-import de.andrena.util.storage.cloud.table.queryFirstOrNull
+import java.time.OffsetDateTime
+import java.util.*
 
 object SensorRepository {
 
     fun insert(sensor: Sensor) {
         sensorsTable().insert(sensor)
+    }
+
+    fun update(sensor: Sensor) {
+        sensorsTable().update(sensor)
     }
 
     fun getByIdAndType(id: String, type: String): Sensor? =
@@ -21,6 +26,18 @@ object SensorRepository {
 
             hasId and hasType
         }
+
+    fun getDeadSensors(deadLine: OffsetDateTime): List<Sensor> {
+        return sensorsTable().query {
+            column(LAST_SEEN_COLUMN) isOnOrBefore Date.from(deadLine.toInstant())
+        }
+    }
+
+    fun getActiveSensors(deadLine: OffsetDateTime): List<Sensor> {
+        return sensorsTable().query {
+            column(LAST_SEEN_COLUMN) isAfter Date.from(deadLine.toInstant())
+        }
+    }
 
     private fun sensorsTable(): CloudTable =
         CloudTableClient.table("sensors")

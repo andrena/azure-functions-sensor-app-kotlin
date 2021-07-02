@@ -7,11 +7,11 @@ import com.microsoft.azure.functions.annotation.HttpTrigger
 import com.microsoft.azure.functions.annotation.QueueOutput
 import de.andrena.util.functionWithJsonRequestBody
 import de.andrena.util.json.encodedAsJson
-import de.andrena.util.respondJson
+import de.andrena.util.respondWith
 
 typealias AggregatedSensorDataOutput = OutputBinding<List<String>>
 
-@FunctionName("ProcessSensorInput")
+@FunctionName("SensorInput")
 fun sensorInput(
     @HttpTrigger(name = "request", methods = [HttpMethod.POST], authLevel = AuthorizationLevel.ANONYMOUS)
     request: HttpRequestMessage<String?>,
@@ -19,11 +19,11 @@ fun sensorInput(
     output: AggregatedSensorDataOutput,
     context: ExecutionContext,
 ): HttpResponseMessage = functionWithJsonRequestBody<Input>(request) {
-    context.logger.info("Processing input.")
+    context.logger.fine("Processing input of sensor ${body.sensorBoxId}.")
 
     val aggregatedInput = body.aggregate()
 
     output.value = aggregatedInput.map { it.encodedAsJson() }
 
-    respondJson(status = HttpStatus.OK, body = aggregatedInput)
+    respondWith(status = HttpStatus.OK)
 }

@@ -1,8 +1,7 @@
 package de.andrena.util.storage.cloud.table
 
-import com.microsoft.azure.storage.table.CloudTable
-import com.microsoft.azure.storage.table.TableBatchOperation
-import com.microsoft.azure.storage.table.TableOperation
+import com.microsoft.azure.storage.ResultSegment
+import com.microsoft.azure.storage.table.*
 import io.mockk.every
 import io.mockk.mockk
 
