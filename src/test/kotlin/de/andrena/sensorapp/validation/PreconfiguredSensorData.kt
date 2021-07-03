@@ -1,15 +1,19 @@
 package de.andrena.sensorapp.validation
 
+import de.andrena.sensorapp.sensor.Sensor
+import de.andrena.sensorapp.sensor.preconfiguredSensor
+import de.andrena.util.lang.stdDev
 import java.time.OffsetDateTime
 
 fun preconfiguredAggregatedSensorData(
-    sensorBoxId: String = "box-1",
+    sensor: Sensor = preconfiguredSensor(),
+    sensorBoxId: String = sensor.sensorBoxId,
     timestamp: OffsetDateTime = OffsetDateTime.now(),
-    sensorType: String = "Temperature",
-    min: Double = -10.0,
-    max: Double = 40.0,
-    average: Double = 18.0,
-    standardDeviation: Double = 5.0,
+    sensorType: String = sensor.type,
+    min: Double = sensor.min,
+    max: Double = sensor.max,
+    average: Double = listOf(min, max).average(),
+    standardDeviation: Double = listOf(min, max).stdDev()!!,
 ) = AggregatedSensorData(
     sensorBoxId = sensorBoxId,
     timestamp = timestamp,

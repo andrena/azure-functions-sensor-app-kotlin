@@ -4,6 +4,7 @@ import com.microsoft.azure.functions.OutputBinding
 import com.microsoft.azure.storage.table.CloudTable
 import com.microsoft.azure.storage.table.TableQuery
 import de.andrena.sensorapp.sensor.Sensor
+import de.andrena.sensorapp.sensor.preconfiguredSensor
 import de.andrena.util.json.encodedAsJson
 import de.andrena.util.mockContext
 import de.andrena.util.storage.cloud.table.CloudTableClient
@@ -26,11 +27,11 @@ internal class ValidationFunctionTest {
         mockkObject(CloudTableClient)
         val sensorsTable = CloudTableClient.setupCloudTable("sensors")
         val lastSeen = OffsetDateTime.of(2021, 6, 30, 0, 0, 0, 0, ZoneOffset.UTC)
-        val sensor = Sensor("Test", "Temperature", -10.0, 200.0)
+        val sensor = preconfiguredSensor(min = -10.0, max = 200.0)
         sensor.lastSeenDateTime = lastSeen
         useSensor(sensorsTable, sensor)
 
-        val dataToValidate = AggregatedSensorData("test", OffsetDateTime.now(), "Temperature", 0.0, 100.0, 50.0, 5.0)
+        val dataToValidate = preconfiguredAggregatedSensorData(sensor = sensor)
         val output = spyk<OutputBinding<String>>()
 
         validation(dataToValidate.encodedAsJson(), output, mockContext())
@@ -44,10 +45,10 @@ internal class ValidationFunctionTest {
         mockkObject(CloudTableClient)
         val sensorsTable = CloudTableClient.setupCloudTable("sensors")
         val sensorAlarmsTable = CloudTableClient.setupCloudTable("sensoralarms")
-        val sensor = Sensor("Test", "Temperature", 10.0, 80.0)
+        val sensor = preconfiguredSensor(max = 80.0)
         useSensor(sensorsTable, sensor)
 
-        val dataToValidate = AggregatedSensorData("test", OffsetDateTime.now(), "Temperature", 0.0, 100.0, 50.0, 5.0)
+        val dataToValidate = preconfiguredAggregatedSensorData(sensor = sensor, max = sensor.max + 1)
         val output = spyk<OutputBinding<String>>()
 
         validation(dataToValidate.encodedAsJson(), output, mockContext())
