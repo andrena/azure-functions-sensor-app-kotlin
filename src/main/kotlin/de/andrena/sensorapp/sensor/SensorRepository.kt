@@ -8,8 +8,6 @@ import de.andrena.util.storage.cloud.table.CloudTableClient
 import de.andrena.util.storage.cloud.table.CloudTableWrapper.Companion.cloudTable
 import de.andrena.util.storage.cloud.table.TableQueryExt.column
 import de.andrena.util.storage.cloud.table.query
-import de.andrena.util.storage.cloud.table.queryFirstOrNull
-import de.andrena.util.storage.cloud.table.update
 import java.time.OffsetDateTime
 import java.util.*
 
@@ -20,11 +18,11 @@ object SensorRepository {
     }
 
     fun update(sensor: Sensor) {
-        sensorsTable().update(sensor)
+        cloudTable("sensors").update(sensor)
     }
 
     fun getByIdAndType(id: String, type: String): Sensor? =
-        sensorsTable().queryFirstOrNull {
+        cloudTable("sensors").queryFirstOrNull {
             val hasId = column(BOX_ID_COLUMN) hasValue id
             val hasType = column(TYPE_COLUMN) hasValue type
 

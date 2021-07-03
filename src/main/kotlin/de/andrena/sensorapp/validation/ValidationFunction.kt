@@ -9,12 +9,14 @@ import de.andrena.sensorapp.sensor.SensorRepository
 import de.andrena.util.json.decodeJson
 import java.time.OffsetDateTime
 
+typealias ValidateOutput = OutputBinding<String>
+
 @FunctionName("SensorValidation")
-fun validation(
+fun validate(
     @QueueTrigger(name = "aggregatedSensorData", queueName = "aggregated-sensor-data", connection = "AzureWebJobsStorage")
     aggregatedSensorData: String,
     @QueueOutput(name = "output", queueName = "validated-sensor-data", connection = "AzureWebJobsStorage")
-    output: OutputBinding<String>,
+    output: ValidateOutput,
     context: ExecutionContext,
 ) {
     val decodedAggregatedSensorData = try {

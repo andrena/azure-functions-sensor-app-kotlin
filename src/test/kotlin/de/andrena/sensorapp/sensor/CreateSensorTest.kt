@@ -23,7 +23,7 @@ internal class CreateSensorTest {
 
     @Test
     fun `saves Sensor to sensors Table`() = cloudTableTest {
-        val sensorsTable = setupCloudTable("sensors")
+        val sensorsTable = setupSensorsTable()
 
         val sensor = preconfiguredSensorTO()
         val response = createSensor(sensor = sensor)
@@ -31,6 +31,9 @@ internal class CreateSensorTest {
         sensorsTable.verifyInsert<Sensor> { it shouldBeEquivalentTo sensor.toSensor() }
         response.status shouldBe CREATED
     }
+
+    private fun setupSensorsTable() =
+        setupCloudTable<Sensor>("sensors")
 
     private fun createSensor(sensor: SensorTO?): HttpResponseMessage {
         val request = preconfiguredPostRequest(body = sensor?.encodedAsJson())

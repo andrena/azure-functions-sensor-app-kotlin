@@ -23,12 +23,6 @@ inline fun <reified T : TableEntity> CloudTable.insertBatch(entities: List<T>) {
     execute(batch)
 }
 
-inline fun <reified T : TableEntity> CloudTable.update(entity: T) {
-    createIfNotExists()
-    entity.etag = "*"
-    execute(TableOperation.merge(entity))
-}
-
 inline fun <reified T : TableEntity> CloudTable.queryFirstOrNull(noinline block: () -> QueryCondition): T? =
     query<T>(block).firstOrNull()
 
