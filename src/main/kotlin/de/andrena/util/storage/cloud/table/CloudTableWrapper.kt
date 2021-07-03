@@ -19,10 +19,20 @@ class CloudTableWrapper private constructor(private val wrapped: CloudTable) {
         wrapped.execute(TableOperation.insert(entity))
     }
 
+    fun <T : TableEntity> insertBatch(entities: List<T>) {
+        wrapped.createIfNotExists()
+        wrapped.execute(batchInsertOperation(entities))
+    }
+
     fun <T : TableEntity> update(entity: T) {
         wrapped.createIfNotExists()
         entity.etag = "*"
         wrapped.execute(TableOperation.merge(entity))
+    }
+
+    fun <T : TableEntity> delete(entity: T) {
+        entity.etag = "*"
+        wrapped.execute(TableOperation.delete(entity))
     }
 
     inline fun <reified T : TableEntity> queryFirstOrNull(noinline block: () -> TableQueryExt.QueryCondition): T? =

@@ -6,9 +6,6 @@ import java.util.*
 
 object TableQueryExt {
 
-    inline fun <reified T : TableEntity> tableQuery(): TableQuery<T> =
-        TableQuery.from(T::class.java)
-
     fun <T : TableEntity> TableQuery<T>.where(block: () -> QueryCondition): TableQuery<T> =
         where(block().value)
 
