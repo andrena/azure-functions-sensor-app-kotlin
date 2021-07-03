@@ -2,9 +2,9 @@ package de.andrena.sensorapp.validation
 
 import com.microsoft.azure.storage.table.CloudTable
 import de.andrena.util.storage.cloud.table.CloudTableClient
+import de.andrena.util.storage.cloud.table.CloudTableWrapper.Companion.cloudTable
 import de.andrena.util.storage.cloud.table.TableQueryExt.column
 import de.andrena.util.storage.cloud.table.delete
-import de.andrena.util.storage.cloud.table.insert
 import de.andrena.util.storage.cloud.table.queryFirstOrNull
 
 object SensorAlarmRepository {
@@ -14,7 +14,7 @@ object SensorAlarmRepository {
     }
 
     fun insert(alarm: SensorAlarm) {
-        sensorAlarmsTable().insert(alarm)
+        cloudTable("sensoralarms").insert(alarm)
     }
 
     fun getByIdAndTypeAndStatus(sensorBoxId: String, sensorType: String, status: String): SensorAlarm? {

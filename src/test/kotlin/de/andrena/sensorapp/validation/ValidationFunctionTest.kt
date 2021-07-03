@@ -7,10 +7,7 @@ import de.andrena.sensorapp.sensor.Sensor
 import de.andrena.sensorapp.sensor.preconfiguredSensor
 import de.andrena.util.json.encodedAsJson
 import de.andrena.util.mockContext
-import de.andrena.util.storage.cloud.table.CloudTableClient
-import de.andrena.util.storage.cloud.table.setupCloudTable
-import de.andrena.util.storage.cloud.table.verifyInsert
-import de.andrena.util.storage.cloud.table.verifyUpdate
+import de.andrena.util.storage.cloud.table.*
 import io.kotest.matchers.date.shouldBeAfter
 import io.mockk.every
 import io.mockk.mockk
@@ -41,10 +38,10 @@ internal class ValidationFunctionTest {
     }
 
     @Test
-    fun `creates alarm for invalid data`() {
+    fun `creates alarm for invalid data`() = cloudTableTest {
         mockkObject(CloudTableClient)
         val sensorsTable = CloudTableClient.setupCloudTable("sensors")
-        val sensorAlarmsTable = CloudTableClient.setupCloudTable("sensoralarms")
+        val sensorAlarmsTable = setupCloudTable("sensoralarms")
         val sensor = preconfiguredSensor(max = 80.0)
         useSensor(sensorsTable, sensor)
 
@@ -53,7 +50,7 @@ internal class ValidationFunctionTest {
 
         validation(dataToValidate.encodedAsJson(), output, mockContext())
 
-        sensorAlarmsTable.verifyInsert()
+        sensorAlarmsTable.verifyInsert<SensorAlarm> { it shouldBeEquivalentTo SensorAlarm.invalidData(sensor) }
     }
 
     private fun useSensor(
