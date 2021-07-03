@@ -6,21 +6,13 @@ import com.microsoft.azure.functions.HttpStatus.CREATED
 import de.andrena.util.json.encodedAsJson
 import de.andrena.util.mockContext
 import de.andrena.util.preconfiguredPostRequest
-import de.andrena.util.storage.cloud.table.CloudTableWrapper
+import de.andrena.util.storage.cloud.table.cloudTableTest
 import de.andrena.util.storage.cloud.table.setupCloudTable
 import de.andrena.util.storage.cloud.table.verifyInsert
 import io.kotest.matchers.shouldBe
-import io.mockk.mockkObject
-import io.mockk.unmockkAll
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
 internal class CreateSensorTest {
-
-    @AfterEach
-    fun afterEach() {
-        unmockkAll()
-    }
 
     @Test
     fun `without Sensor returns BadRequest`() {
@@ -30,8 +22,7 @@ internal class CreateSensorTest {
     }
 
     @Test
-    fun `saves Sensor to sensors Table`() {
-        mockkObject(CloudTableWrapper)
+    fun `saves Sensor to sensors Table`() = cloudTableTest {
         val sensorsTable = setupCloudTable("sensors")
 
         val sensor = preconfiguredSensorTO()
