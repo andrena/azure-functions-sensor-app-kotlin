@@ -46,7 +46,7 @@ fun inactiveSensors(
     val deadSensors = SensorRepository.getDeadSensors(deadLine)
     context.logger.info("Found ${deadSensors.size} dead sensors")
     deadSensors.forEach {
-        SensorAlarmRepository.insert(SensorAlarm.dead(it), true)
+        SensorAlarmRepository.insertSingleton(SensorAlarm.dead(it))
     }
 
     val activeSensors = SensorRepository.getActiveSensors(deadLine)
@@ -71,7 +71,7 @@ private fun validateAndUpdateLastSeen(aggregatedSensorData: AggregatedSensorData
     if (aggregatedSensorData.isValidFor(sensor))
         return ValidationResult.Ok
 
-    SensorAlarmRepository.insert(SensorAlarm.invalidData(sensor), false)
+    SensorAlarmRepository.insert(SensorAlarm.invalidData(sensor))
     return ValidationResult.Error("Invalid data")
 }
 

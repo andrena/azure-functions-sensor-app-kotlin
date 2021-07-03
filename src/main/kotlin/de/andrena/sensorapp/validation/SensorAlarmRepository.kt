@@ -9,14 +9,11 @@ import de.andrena.util.storage.cloud.table.queryFirstOrNull
 
 object SensorAlarmRepository {
 
-    fun insert(alarm: SensorAlarm, singleton: Boolean) {
-        if (singleton) {
-            val existingSensorAlarm = getByIdAndTypeAndStatus(alarm.sensorBoxId, alarm.sensorType, alarm.status)
-            if (existingSensorAlarm != null) {
-                return
-            }
-        }
+    fun insertSingleton(alarm: SensorAlarm) {
+        getByIdAndTypeAndStatus(alarm.sensorBoxId, alarm.sensorType, alarm.status) ?: insert(alarm)
+    }
 
+    fun insert(alarm: SensorAlarm) {
         sensorAlarmsTable().insert(alarm)
     }
 
