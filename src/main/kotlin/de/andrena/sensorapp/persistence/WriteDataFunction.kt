@@ -46,22 +46,21 @@ class WriteDataFunction : KoinComponent {
         context.logger.fine("Persisting aggregatedSensorData. $data")
 
         val sensorData = listOf(
-            createSensorData(data, "Min", data.min),
-            createSensorData(data, "Max", data.max),
-            createSensorData(data, "Mean", data.average),
-            createSensorData(data, "StandardDeviation", data.standardDeviation)
+            data.toSensorData("Min", data.min),
+            data.toSensorData("Max", data.max),
+            data.toSensorData("Mean", data.average),
+            data.toSensorData("StandardDeviation", data.standardDeviation)
         )
         return sensorDataRepository.insertBatch(sensorData)
     }
 
-    private fun createSensorData(data: AggregatedSensorData, aggregationType: String, value: Double): SensorData {
-        val sensorData = SensorData(
-            data.sensorBoxId,
-            sensorType = data.sensorType,
-            aggregationType = aggregationType,
-            value = value,
-        )
-        sensorData.createdAt = data.timestamp
-        return sensorData
+    private fun AggregatedSensorData.toSensorData(aggregationType: String, value: Double) = SensorData(
+        sensorBoxId = sensorBoxId,
+        sensorType = sensorType,
+        aggregationType = aggregationType,
+        value = value,
+    ).apply {
+        createdAt = this@toSensorData.timestamp
     }
+
 }
