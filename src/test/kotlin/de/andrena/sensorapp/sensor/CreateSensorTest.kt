@@ -6,11 +6,12 @@ import com.microsoft.azure.functions.HttpStatus.CREATED
 import de.andrena.util.json.encodedAsJson
 import de.andrena.util.mockContext
 import de.andrena.util.preconfiguredPostRequest
-import de.andrena.util.storage.cloud.table.CloudTableClient
+import de.andrena.util.storage.cloud.table.CloudTableWrapper
 import de.andrena.util.storage.cloud.table.setupCloudTable
 import de.andrena.util.storage.cloud.table.verifyInsert
 import io.kotest.matchers.shouldBe
-import io.mockk.*
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
@@ -30,12 +31,13 @@ internal class CreateSensorTest {
 
     @Test
     fun `saves Sensor to sensors Table`() {
-        mockkObject(CloudTableClient)
-        val sensorsTable = CloudTableClient.setupCloudTable("sensors")
+        mockkObject(CloudTableWrapper)
+        val sensorsTable = setupCloudTable("sensors")
 
-        val response = createSensor(sensor = preconfiguredSensorTO())
+        val sensor = preconfiguredSensorTO()
+        val response = createSensor(sensor = sensor)
 
-        sensorsTable.verifyInsert()
+        sensorsTable.verifyInsert<Sensor> { it shouldBeEquivalentTo sensor.toSensor() }
         response.status shouldBe CREATED
     }
 
