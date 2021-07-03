@@ -6,8 +6,8 @@ import com.microsoft.azure.functions.HttpStatus.CREATED
 import de.andrena.util.json.encodedAsJson
 import de.andrena.util.mockContext
 import de.andrena.util.preconfiguredPostRequest
+import de.andrena.util.storage.cloud.table.CloudTableTest
 import de.andrena.util.storage.cloud.table.cloudTableTest
-import de.andrena.util.storage.cloud.table.setupCloudTable
 import de.andrena.util.storage.cloud.table.verifyInsert
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -32,7 +32,7 @@ internal class CreateSensorTest {
         response.status shouldBe CREATED
     }
 
-    private fun setupSensorsTable() =
+    private fun CloudTableTest.setupSensorsTable() =
         setupCloudTable<Sensor>("sensors")
 
     private fun createSensor(sensor: SensorTO?): HttpResponseMessage {

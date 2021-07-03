@@ -1,7 +1,6 @@
 package de.andrena.sensorapp.persistence
 
 import de.andrena.util.storage.cloud.table.cloudTableTest
-import de.andrena.util.storage.cloud.table.setupCloudTable
 import de.andrena.util.storage.cloud.table.verifyInsertBatch
 import org.junit.jupiter.api.Test
 

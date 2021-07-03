@@ -5,8 +5,8 @@ import de.andrena.sensorapp.sensor.preconfiguredSensor
 import de.andrena.sensorapp.sensor.shouldBeEquivalentTo
 import de.andrena.util.json.encodedAsJson
 import de.andrena.util.mockContext
+import de.andrena.util.storage.cloud.table.CloudTableTest
 import de.andrena.util.storage.cloud.table.cloudTableTest
-import de.andrena.util.storage.cloud.table.setupCloudTable
 import de.andrena.util.storage.cloud.table.verifyInsert
 import de.andrena.util.storage.cloud.table.verifyUpdate
 import io.kotest.matchers.date.shouldBeAfter
@@ -40,11 +40,11 @@ internal class ValidationFunctionTest {
         sensorAlarmsTable.verifyInsert<SensorAlarm> { it shouldBeEquivalentTo SensorAlarm.invalidData(sensor) }
     }
 
-    private fun setupSensorsTable(sensors: List<Sensor> = emptyList()) =
+    private fun CloudTableTest.setupSensorsTable(sensors: List<Sensor> = emptyList()) =
         setupCloudTable("sensors", entities = sensors)
 
     private fun setupSensorAlarmsTable() =
-        setupCloudTable<SensorAlarm>("sensoralarms")
+        CloudTableTest.setupCloudTable<SensorAlarm>("sensoralarms")
 
     private fun validate(aggregatedSensorData: AggregatedSensorData) {
         validate(aggregatedSensorData.encodedAsJson(), spyk(), mockContext())
