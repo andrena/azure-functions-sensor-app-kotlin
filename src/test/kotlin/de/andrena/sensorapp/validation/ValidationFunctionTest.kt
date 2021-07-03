@@ -6,7 +6,10 @@ import com.microsoft.azure.storage.table.TableQuery
 import de.andrena.sensorapp.sensor.Sensor
 import de.andrena.util.json.encodedAsJson
 import de.andrena.util.mockContext
-import de.andrena.util.storage.cloud.table.*
+import de.andrena.util.storage.cloud.table.CloudTableClient
+import de.andrena.util.storage.cloud.table.setupCloudTable
+import de.andrena.util.storage.cloud.table.verifyInsert
+import de.andrena.util.storage.cloud.table.verifyUpdate
 import io.kotest.matchers.date.shouldBeAfter
 import io.mockk.every
 import io.mockk.mockk
@@ -15,7 +18,6 @@ import io.mockk.spyk
 import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.util.*
 
 internal class ValidationFunctionTest {
 
@@ -23,7 +25,7 @@ internal class ValidationFunctionTest {
     fun `updates sensor and sets lastSeen while validating data`() {
         mockkObject(CloudTableClient)
         val sensorsTable = CloudTableClient.setupCloudTable("sensors")
-        var lastSeen = OffsetDateTime.of(2021, 6, 30, 0, 0, 0, 0, ZoneOffset.UTC)
+        val lastSeen = OffsetDateTime.of(2021, 6, 30, 0, 0, 0, 0, ZoneOffset.UTC)
         val sensor = Sensor("Test", "Temperature", -10.0, 200.0)
         sensor.lastSeenDateTime = lastSeen
         useSensor(sensorsTable, sensor)

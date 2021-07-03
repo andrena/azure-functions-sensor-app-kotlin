@@ -52,7 +52,7 @@ fun inactiveSensors(
     val activeSensors = SensorRepository.getActiveSensors(deadLine)
     context.logger.info("Found ${activeSensors.size} active sensors")
     activeSensors.forEach {
-        val deadSensorAlarm = SensorAlarmRepository.getByIdAndTypeAndStatus(it.sensorBoxId, it.type, SensorAlarm.DEAD);
+        val deadSensorAlarm = SensorAlarmRepository.getByIdAndTypeAndStatus(it.sensorBoxId, it.type, SensorAlarm.DEAD)
         if (deadSensorAlarm != null) {
             SensorAlarmRepository.delete(deadSensorAlarm)
         }

@@ -4,8 +4,6 @@ import com.microsoft.azure.functions.*
 import com.microsoft.azure.functions.HttpStatus.BAD_REQUEST
 import com.microsoft.azure.functions.HttpStatus.INTERNAL_SERVER_ERROR
 import de.andrena.util.json.decodeJson
-import de.andrena.util.json.jsonSerializer
-import kotlinx.serialization.encodeToString
 import java.net.URI
 
 fun <T> HttpRequestMessage<T>.respondBadRequest(message: String): HttpResponseMessage =
@@ -13,9 +11,6 @@ fun <T> HttpRequestMessage<T>.respondBadRequest(message: String): HttpResponseMe
 
 fun <T> HttpRequestMessage<T>.respondInternalServerError(message: String): HttpResponseMessage =
     this.respondWith(INTERNAL_SERVER_ERROR, body = message)
-
-inline fun <T, reified R> HttpRequestMessage<T>.respondJson(status: HttpStatus, body: R): HttpResponseMessage =
-    this.createResponseBuilder(status).body(jsonSerializer.encodeToString(body)).build()
 
 fun <T> HttpRequestMessage<T>.respondWith(status: HttpStatus, body: Any): HttpResponseMessage =
     this.createResponseBuilder(status).body(body).build()
