@@ -259,6 +259,7 @@
                 <configuration>
                     <args>
                         <arg>-Xjsr305=strict</arg>
+                        <arg>-Xopt-in=org.koin.core.component.KoinApiExtension</arg>
                     </args>
                     <compilerPlugins>
                         <plugin>no-arg</plugin>
