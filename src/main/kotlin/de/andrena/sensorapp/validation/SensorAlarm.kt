@@ -34,6 +34,7 @@ class SensorAlarm(
     val sensorBoxId: String
         get() = partitionKey
 
+    @Suppress("unused")
     var firedAt: OffsetDateTime
         @Ignore
         get() = OffsetDateTime.from(timeStamp.toInstant().atOffset(ZoneOffset.UTC))

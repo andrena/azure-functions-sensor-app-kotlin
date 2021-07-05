@@ -1,10 +1,10 @@
 package de.andrena.sensorapp.sensor
 
-import com.microsoft.azure.storage.table.CloudTable
 import de.andrena.sensorapp.sensor.Sensor.Companion.BOX_ID_COLUMN
 import de.andrena.sensorapp.sensor.Sensor.Companion.LAST_SEEN_COLUMN
 import de.andrena.sensorapp.sensor.Sensor.Companion.TYPE_COLUMN
-import de.andrena.util.storage.cloud.table.*
+import de.andrena.util.storage.cloud.table.CloudTableWrapper
+import de.andrena.util.storage.cloud.table.CloudTableWrapper.Companion.cloudTable
 import de.andrena.util.storage.cloud.table.TableQueryExt.column
 import java.time.OffsetDateTime
 import java.util.*
@@ -39,7 +39,7 @@ object SensorRepository {
         }
     }
 
-    private fun sensorsTable(): CloudTable =
-        CloudTableClient.table("sensors")
+    private fun sensorsTable(): CloudTableWrapper =
+        cloudTable("sensors")
 
 }

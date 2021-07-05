@@ -1,22 +1,16 @@
 package de.andrena.sensorapp.validation
 
-import com.microsoft.azure.storage.table.CloudTable
-import de.andrena.util.storage.cloud.table.CloudTableClient
+import de.andrena.util.storage.cloud.table.CloudTableWrapper
+import de.andrena.util.storage.cloud.table.CloudTableWrapper.Companion.cloudTable
 import de.andrena.util.storage.cloud.table.TableQueryExt.column
-import de.andrena.util.storage.cloud.table.delete
-import de.andrena.util.storage.cloud.table.insert
-import de.andrena.util.storage.cloud.table.queryFirstOrNull
 
 object SensorAlarmRepository {
 
-    fun insert(alarm: SensorAlarm, singleton: Boolean) {
-        if (singleton) {
-            val existingSensorAlarm = getByIdAndTypeAndStatus(alarm.sensorBoxId, alarm.sensorType, alarm.status)
-            if (existingSensorAlarm != null) {
-                return
-            }
-        }
+    fun insertSingleton(alarm: SensorAlarm) {
+        getByIdAndTypeAndStatus(alarm.sensorBoxId, alarm.sensorType, alarm.status) ?: insert(alarm)
+    }
 
+    fun insert(alarm: SensorAlarm) {
         sensorAlarmsTable().insert(alarm)
     }
 
@@ -34,7 +28,7 @@ object SensorAlarmRepository {
         sensorAlarmsTable().delete(alarm)
     }
 
-    private fun sensorAlarmsTable(): CloudTable =
-        CloudTableClient.table("sensoralarms")
+    private fun sensorAlarmsTable(): CloudTableWrapper =
+        cloudTable("sensoralarms")
 
 }

@@ -41,6 +41,7 @@ class Input(
     )
 }
 
+@Suppress("unused")
 @Serializable
 class AggregatedInput(
     private val sensorBoxId: String,
