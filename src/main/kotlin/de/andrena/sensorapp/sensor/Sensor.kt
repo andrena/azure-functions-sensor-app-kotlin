@@ -10,6 +10,13 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.*
 
+fun Sensor.toSensorTO() = SensorTO(
+    boxId = sensorBoxId,
+    type = type,
+    min = min,
+    max = max,
+)
+
 @Serializable
 class SensorTO(
     private val boxId: String,
