@@ -6,6 +6,11 @@ import de.andrena.util.web.exceptionToHttpResponseMessage
 
 typealias AzureFunction<T> = HttpRequestMessage<T>.() -> HttpResponseMessage
 
+fun function(
+    request: HttpRequestMessage<Unit>,
+    block: AzureFunction<Unit>,
+): HttpResponseMessage = exceptionToHttpResponseMessage(request) { request.block() }
+
 inline fun <reified T : Any> functionWithJsonRequestBody(
     request: HttpRequestMessage<String?>,
     noinline block: AzureFunction<T>,

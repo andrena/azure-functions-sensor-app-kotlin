@@ -1,13 +1,18 @@
 package de.andrena.util
 
 import com.microsoft.azure.functions.*
-import com.microsoft.azure.functions.HttpStatus.BAD_REQUEST
-import com.microsoft.azure.functions.HttpStatus.INTERNAL_SERVER_ERROR
+import com.microsoft.azure.functions.HttpStatus.*
 import de.andrena.util.json.decodeJson
 import java.net.URI
 
+fun HttpRequestMessage<*>.mandatoryQueryParam(name: String): String =
+    requireNotNull(queryParameters[name]) { "QueryParam $name is mandatory" }
+
 fun <T> HttpRequestMessage<T>.respondBadRequest(message: String): HttpResponseMessage =
     this.respondWith(BAD_REQUEST, body = message)
+
+fun <T> HttpRequestMessage<T>.respondNotFound(message: String): HttpResponseMessage =
+    this.respondWith(NOT_FOUND, body = message)
 
 fun <T> HttpRequestMessage<T>.respondInternalServerError(message: String): HttpResponseMessage =
     this.respondWith(INTERNAL_SERVER_ERROR, body = message)
